@@ -1,0 +1,18 @@
+{
+    "name": "tdt/filehelpers",
+    "description": "Different libraries which help you reading files",
+    "keywords": ["shp shape file reading"],
+    "homepage": "http://thedatatank.com",
+    "type": "library",
+    "license": "AGPLv3",
+    "suggest": {
+    },
+    "require": {
+    },
+    "minimum-stability" : "dev",
+    "autoload": {
+        "psr-0": {
+            "tdt\\filehelpers\\": "src/"
+        }
+    }
+}
