@@ -106,10 +106,6 @@ class ShapeFile{
         
         $this->_fetchShpBasicConfiguration();
 
-        if(!$this->fp){
-            throw new Exception("Could not open file after fetchShpBasicConf");
-        }
-
         //Set the dbf filename
         $this->dbf_filename = processDBFFileName($this->file_name);
 
@@ -121,8 +117,7 @@ class ShapeFile{
     }
 
 	
-    function __destruct()
-    {
+    function __destruct(){
         $this->closeFile();
     }
 
@@ -137,7 +132,9 @@ class ShapeFile{
         ////_d("SHP bounding box detected: miX=".$this->shp_bounding_box["xmin"]." miY=".$this->shp_bounding_box["ymin"]." maX=".$this->shp_bounding_box["xmax"]." maY=".$this->shp_bounding_box["ymax"]);
     }
 
-
+    public function hasNext(){
+        return !feof($this->fp);
+    }
 
     public function getNext(){
         if (!feof($this->fp)) {
@@ -154,31 +151,6 @@ class ShapeFile{
         }
         return false;
     }
-
-    /* Takes too much memory
-       function _fetchRecords(){
-       fseek($this->fp, 100);
-       while(!feof($this->fp)){
-       $shp_record = new ShapeRecord($this->fp, $this->file_name);
-       if($shp_record->error_message != ""){
-       return false;
-       }
-       $this->records[] = $shp_record;
-       }
-       }
-    */
-
-//Not Used
-/*	private function getDBFHeader(){
-        $dbf_data = array();
-        if(is_readable($dbf_data)){
-        $dbf = dbase_open($this->dbf_filename , 1);
-        // solo en PHP5 $dbf_data = dbase_get_header_info($dbf);
-        echo dbase_get_header_info($dbf);
-        }
-	}
-*/
-
     // General functions        
     private function setError($error){
         $this->error_message = $error;
