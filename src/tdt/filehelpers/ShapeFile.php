@@ -32,6 +32,8 @@
  * Does not load the information until you tell it too (saves time)
  * Added an option to not read the polygon points can be handy sometimes, and saves time :-)
  * 
+ * Fixed by Pieter Colpaert to support PSR-0
+ *
  * Example:
 		
  //sets the options to show the polygon points, 'noparts' => true would skip that and save time
@@ -88,19 +90,25 @@ class ShapeFile{
 
     private $records;
 
-    function ShapeFile($file_name,$options){
+    public function __construct($file_name,$options){
         $this->options = $options;
 
         $this->file_name = $file_name;
-        //_d("Opening [$file_name]");
+
         if(!is_readable($file_name)){
-            //return $this->setError( sprintf(ERROR_FILE_NOT_FOUND, $file_name) );
             throw new Exception(sprintf(ERROR_FILE_NOT_FOUND, $file_name));
         }
-
         $this->fp = fopen($this->file_name, "rb");
-		
+
+        if(!$this->fp){
+            throw new Exception("Could not open file");
+        }
+        
         $this->_fetchShpBasicConfiguration();
+
+        if(!$this->fp){
+            throw new Exception("Could not open file after fetchShpBasicConf");
+        }
 
         //Set the dbf filename
         $this->dbf_filename = processDBFFileName($this->file_name);
@@ -217,7 +225,7 @@ class ShapeRecord{
                                     3 => "RecordPolyLine",
                                     5 => "RecordPolygon");
 
-    function ShapeRecord(&$fp, $file_name,$options){
+    public function __construct(&$fp, $file_name,$options){
         $this->fp = $fp;
         $this->fpos = ftell($fp);
         $this->options = $options;
@@ -282,6 +290,10 @@ class ShapeRecord{
     public function getDbfFields(){
 
         $fdbf = fopen($this->file_name,'r');
+        if(!$fdbf){
+            throw new Exception("Could not open " . $this->file_name);
+        }
+        
         $fields = array();
         $buf = fread($fdbf,32);
         $goon = true;

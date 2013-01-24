@@ -1,9 +1,10 @@
 <?php
 
 require("../vendor/autoload.php");
+use \tdt\filehelpers\ShapeFile;
 
 $options = array('noparts' => false);
-$shp = new ShapeFile("",$options); 
+$shp = new ShapeFile("knoop_full_export.shp",$options); 
 
 //Dump the ten first records
 $i = 0;
