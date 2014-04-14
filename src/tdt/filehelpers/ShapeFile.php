@@ -246,7 +246,7 @@ class ShapeRecord{
     }
 
     public function getShpData(){
-        $function_name = "read".$this->getRecordClass();
+        $function_name = 'tdt\\filehelpers\\read'.$this->getRecordClass();
 
         //_d("Calling reading function [$function_name] starting at byte ".ftell($fp));
 
